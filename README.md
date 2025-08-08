@@ -8,12 +8,12 @@ Os inserts utilizam *generators* do Firebird quando aplicável e campos textuais
 ## 🚀 Endpoints
 
 
-**Endpoints:**
-api.tisoluciona.com/api/
-**JWT_TOKEN:**
-23hhahk34k54fjdhj3na234544jasjm2
 
+### 1) Endpoints
+**Endpoint principal:** `api.tisoluciona.com/api/`
 
+### 1) JWT_TOKEN
+**Rota:** `23hhahk34k54fjdhj3na234544jasjm2`
 
 ### 1) Criar Pedido
 **Rota:** `POST /criar-pedido`
