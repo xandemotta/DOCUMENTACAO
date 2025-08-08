@@ -12,10 +12,10 @@ Os inserts utilizam *generators* do Firebird quando aplicável e campos textuais
 ### 1) Endpoints
 **Endpoint principal:** `api.tisoluciona.com/api/`
 
-### 1) JWT_TOKEN
+### 1.1) JWT_TOKEN
 **JWT_TOKEN:** `23hhahk34k54fjdhj3na234544jasjm2`
 
-### 1) Criar Pedido
+### 2) Criar Pedido
 **Rota:** `POST /criar-pedido`
 
 **Descrição:**  
@@ -85,7 +85,7 @@ Cria um pedido (registro em `TABMOVTRA`) e, opcionalmente, insere as NFs associa
 
 ---
 
-### 2) Inserir Nota Fiscal
+### 2.1) Inserir Nota Fiscal
 **Rota:** `POST /inserir-nf`
 
 **Descrição:**  
@@ -144,7 +144,7 @@ O campo `ITEM` é gerado automaticamente pelo banco com `GEN_ID(ITEMMOVTRA, 1)` 
 
 ---
 
-### 3) Inserir XML da Nota Fiscal
+### 2.2) Inserir XML da Nota Fiscal
 **Rota:** `POST /inserir-xml`
 
 **Descrição:**  
@@ -175,7 +175,7 @@ O campo `ITEMXMLNFE` é gerado automaticamente pelo banco com `GEN_ID(GEN_ITEMXM
 
 ---
 
-### 4) Consultar Pedido
+### 2.3) Consultar Pedido
 **Rota:** `GET /pedido`  
 **Parâmetros de Query:**  
 - `nomovtra` *(obrigatório)* — Número do movimento de transporte.
