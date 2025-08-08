@@ -9,7 +9,10 @@ Os inserts utilizam *generators* do Firebird quando aplicável e campos textuais
 
 
 **Endpoints:**
-**api.tisoluciona.com/api/**
+api.tisoluciona.com/api/
+**JWT_TOKEN:**
+23hhahk34k54fjdhj3na234544jasjm2
+
 
 
 ### 1) Criar Pedido
