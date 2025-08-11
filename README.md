@@ -231,4 +231,5 @@ GET /pedido?nomovtra=999960
 - Node.js + Express
 - Firebird (serviço em `services/firebirdService`)
 - `iconv-lite` para encoding
+- OBS> ESTÃO FAZENDO INSERÇÕES DE HOMOLOGAÇÃO NESSE MOMENTO
 
