@@ -247,8 +247,8 @@ curl -G "https://api.tisoluciona.com/api/pedido"  -H "Authorization: Bearer 23hh
 ---
 
 ## 2.4) Documentos Fiscais do Pedido: listar
-**Rota base do módulo**: `/dir-cte`  
-> O router desta funcionalidade é montado como `app.use("/dir-cte", require("./routes/documentos"));`
+**Rota base do módulo**: `https://api.tisoluiciona.com/dir-cte`  
+
 
 ### 2.4.1) Listar documentos por pedido
 **Rota**: `GET /dir-cte/:nomovtra`
