@@ -285,7 +285,7 @@ Há normalização segura de caminhos para Windows e Linux, incluindo suporte a 
 curl "https://api.tisoluciona.com/api/dir-cte/999960"  -H "Authorization: Bearer 23hhahk34k54fjdhj3na234544jasjm2"
 
 # Listar apenas os existentes, filtrando por pdf
-curl "https://api.tisoluciona.com/api/documentos/999960?onlyExists=1&tipo=pdf"  -H "Authorization: Bearer 23hhahk34k54fjdhj3na234544jasjm2"
+curl "https://api.tisoluciona.com/api/dir-cte/999960?onlyExists=1&tipo=pdf"  -H "Authorization: Bearer 23hhahk34k54fjdhj3na234544jasjm2"
 ```
 
 
