@@ -246,7 +246,7 @@ curl -G "https://api.tisoluciona.com/api/pedido"  -H "Authorization: Bearer 23hh
 
 ---
 
-## 2.4) Documentos Fiscais do Pedido: listar e baixar
+## 2.4) Documentos Fiscais do Pedido: listar
 **Rota base do módulo**: `/dir-cte`  
 > O router desta funcionalidade é montado como `app.use("/dir-cte", require("./routes/documentos"));`
 
@@ -327,7 +327,7 @@ curl "https://api.tisoluciona.com/api/documentos/999960?onlyExists=1&tipo=pdf"  
 ---
 
 ## 📝 Changelog
-- **2025-08-12** Adicionada a rota **/documentos** para listar e baixar XML e PDF do CTe por `nomovtra` com validação opcional de existência no filesystem.
+- **2025-08-12** Adicionada a rota **/dir-cte** para listar XML e PDF do CTe por `nomovtra` com validação opcional de existência no filesystem.
 
 ---
 
