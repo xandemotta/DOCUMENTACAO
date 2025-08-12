@@ -247,17 +247,11 @@ curl -G "https://api.tisoluciona.com/api/pedido"  -H "Authorization: Bearer 23hh
 ---
 
 ## 2.4) Documentos Fiscais do Pedido: listar e baixar
-**Rota base do módulo**: `/documentos`  
-> O router desta funcionalidade é montado como `app.use("/api/documentos", require("./routes/documentos"));`
+**Rota base do módulo**: `/dir-cte`  
+> O router desta funcionalidade é montado como `app.use("/dir-cte", require("./routes/documentos"));`
 
 ### 2.4.1) Listar documentos por pedido
-**Rota**: `GET /documentos/:nomovtra`
-
-**Query**
-- `verify` *(opcional)* valida a existência física no filesystem e inclui `exists` no retorno  
-- `onlyExists` *(opcional)* retorna somente arquivos que existem fisicamente  
-- `tipo` *(opcional)* filtra por tipo `xml` ou `pdf`  
-- `debug` *(opcional)* retorna também `count` e mantém todos os campos internos
+**Rota**: `GET /dir-cte/:nomovtra`
 
 **Descrição**  
 Lista caminhos dos documentos fiscais de um `nomovtra`. Usa a procedure `PORTAL_PEDIDO_DOCFISCAL(?)` quando disponível. Se não houver linhas, usa fallback direto nas tabelas `TABCTRC` e `TABCONF` para montar nomes esperados de arquivos `-cte.xml` e `-cte.pdf`.  
@@ -280,7 +274,6 @@ Há normalização segura de caminhos para Windows e Linux, incluindo suporte a 
       "tipoarquivo": "pdf",
       "nomearquivo": "35240812345678900015550010000123451000012345-cte.pdf",
       "dircompleto": "C:\\CTE\\2025\\08\\35240812345678900015550010000123451000012345-cte.pdf",
-      "exists": false
     }
   ]
 }
@@ -289,31 +282,13 @@ Há normalização segura de caminhos para Windows e Linux, incluindo suporte a 
 **cURL**
 ```bash
 # Listar todos
-curl "https://api.tisoluciona.com/api/documentos/999960"  -H "Authorization: Bearer 23hhahk34k54fjdhj3na234544jasjm2"
+curl "https://api.tisoluciona.com/api/dir-cte/999960"  -H "Authorization: Bearer 23hhahk34k54fjdhj3na234544jasjm2"
 
 # Listar apenas os existentes, filtrando por pdf
 curl "https://api.tisoluciona.com/api/documentos/999960?onlyExists=1&tipo=pdf"  -H "Authorization: Bearer 23hhahk34k54fjdhj3na234544jasjm2"
 ```
 
-### 2.4.2) Download de um documento
-**Rota**: `GET /documentos/:nomovtra/download`
 
-**Query**
-- `nome` *(opcional)* nome exato do arquivo retornado pela listagem  
-- `tipo` *(opcional)* atalho para o primeiro arquivo do tipo `xml` ou `pdf` quando `nome` não é informado
-
-**Descrição**  
-Baixa um arquivo do pedido. A resolução prioriza `nome`. Na ausência, usa o primeiro do `tipo` solicitado. Retorna `404` quando o arquivo não for localizado ou quando o caminho não existir no filesystem.
-
-**Exemplo de download por tipo**
-```bash
-curl -L "https://api.tisoluciona.com/api/documentos/999960/download?tipo=xml"  -H "Authorization: Bearer 23hhahk34k54fjdhj3na234544jasjm2"  -o 999960-cte.xml
-```
-
-**Exemplo de download por nome**
-```bash
-curl -L "https://api.tisoluciona.com/api/documentos/999960/download?nome=35240812345678900015550010000123451000012345-cte.pdf"  -H "Authorization: Bearer 23hhahk34k54fjdhj3na234544jasjm2"  -o 35240812345678900015550010000123451000012345-cte.pdf
-```
 
 **Códigos de status**
 - `200` arquivo enviado com `Content-Type` coerente  
