@@ -95,7 +95,7 @@ Cria um pedido (registro em `TABMOVTRA`) e, opcionalmente, insere as NFs associa
 
 **cURL**
 ```bash
-curl -X POST "https://api.tisoluciona.com/api/criar-pedido"  -H "Authorization: Bearer 23hhahk34k54fjdhj3na234544jasjm2"  -H "Content-Type: application/json"  -d '{ "placaCavalo":"MBQ9466", "localColeta":4776, "localEntrega":3334, "clienteFaturamento":3003, "processoCliente":"PROC-XYZ", "tipoContainer":1, "numeroContainer":"ABCD1234567", "nomeMotorista":5102, "placaCarreta1":"MEE3078", "placaCarreta2":null, "empresa":1, "tipoFrete":1, "tipoCarga":2, "pesoBrutoTotal":18500.75, "valorTotalNotas":32000.5, "usuario":"INTEGRADOR1", "notasFiscais":[{ "nonf":456789, "dataemi":"2025-08-06", "pesobr":5000.75, "vlrtotal":12499.99, "chavenfe":"35230806748539000105550010000123451000012340", "cfop":"5353", "usuario":"INTEGRADOR1" }] }'
+curl -X POST "https://api.tisoluciona.com/api/criar-pedido" \  -H "Authorization: Bearer 23hhahk34k54fjdhj3na234544jasjm2" \  -H "Content-Type: application/json" \  -d '{ "placaCavalo":"MBQ9466", "localColeta":4776, "localEntrega":3334, "clienteFaturamento":3003, "processoCliente":"PROC-XYZ", "tipoContainer":1, "numeroContainer":"ABCD1234567", "nomeMotorista":5102, "placaCarreta1":"MEE3078", "placaCarreta2":null, "empresa":1, "tipoFrete":1, "tipoCarga":2, "pesoBrutoTotal":18500.75, "valorTotalNotas":32000.5, "usuario":"INTEGRADOR1", "notasFiscais":[{ "nonf":456789, "dataemi":"2025-08-06", "pesobr":5000.75, "vlrtotal":12499.99, "chavenfe":"35230806748539000105550010000123451000012340", "cfop":"5353", "usuario":"INTEGRADOR1" }] }'
 ```
 
 ---
@@ -150,15 +150,12 @@ Insere uma NF em `TABMOVTRA_NF` para um `nomovtra` existente. `ITEM` é gerado a
 
 **Resposta de Sucesso**
 ```json
-{
-  "message": "Nota Fiscal registrada com sucesso.",
-  "item": 1234
-}
+{ "message": "Nota Fiscal registrada com sucesso.", "item": 1234 }
 ```
 
 **cURL**
 ```bash
-curl -X POST "https://api.tisoluciona.com/api/inserir-nf"  -H "Authorization: Bearer 23hhahk34k54fjdhj3na234544jasjm2"  -H "Content-Type: application/json"  -d '{ "nomovtra":999953, "senf":"001", "dataemi":"2025-08-06", "qtdevol":0, "pesobr":5000.75, "esp":"CAIXA", "prod":"ELETRONICOS", "chavenfe":"35230806748539000105550010000123451000012340", "vlrtotal":12499.99, "bc":12499.99, "icms":1874.99, "m3":12.5, "descroutros":"NF de teste SIMULANDO", "tpdoc":"55", "nonf":456789, "cfop":"5353", "vrmerc":12499.99 }'
+curl -X POST "https://api.tisoluciona.com/api/inserir-nf" \  -H "Authorization: Bearer 23hhahk34k54fjdhj3na234544jasjm2" \  -H "Content-Type: application/json" \  -d '{ "nomovtra":999953, "senf":"001", "dataemi":"2025-08-06", "qtdevol":0, "pesobr":5000.75, "esp":"CAIXA", "prod":"ELETRONICOS", "chavenfe":"35230806748539000105550010000123451000012340", "vlrtotal":12499.99, "bc":12499.99, "icms":1874.99, "m3":12.5, "descroutros":"NF de teste SIMULANDO", "tpdoc":"55", "nonf":456789, "cfop":"5353", "vrmerc":12499.99 }'
 ```
 
 ---
@@ -185,15 +182,12 @@ Anexa o XML da NF em `TABMOVTRA_NF_XML`. `ITEMXMLNFE` é gerado com `GEN_ID(GEN_
 
 **Resposta de Sucesso**
 ```json
-{
-  "message": "XML da NF registrado com sucesso.",
-  "itemxmlnfe": 5678
-}
+{ "message": "XML da NF registrado com sucesso.", "itemxmlnfe": 5678 }
 ```
 
 **cURL**
 ```bash
-curl -X POST "https://api.tisoluciona.com/api/inserir-xml"  -H "Authorization: Bearer 23hhahk34k54fjdhj3na234544jasjm2"  -H "Content-Type: application/json"  -d '{ "nomovtra":999954, "item":12, "xml":"<nfeProc versao=\"4.00\" xmlns=\"http://www.portalfiscal.inf.br/nfe\"><NFe>...</NFe></nfeProc>" }'
+curl -X POST "https://api.tisoluciona.com/api/inserir-xml" \  -H "Authorization: Bearer 23hhahk34k54fjdhj3na234544jasjm2" \  -H "Content-Type: application/json" \  -d '{ "nomovtra":999954, "item":12, "xml":"<nfeProc versao=\"4.00\" xmlns=\"http://www.portalfiscal.inf.br/nfe\"><NFe>...</NFe></nfeProc>" }'
 ```
 
 ---
@@ -241,14 +235,13 @@ GET /pedido?nomovtra=999960
 
 **cURL**
 ```bash
-curl -G "https://api.tisoluciona.com/api/pedido"  -H "Authorization: Bearer 23hhahk34k54fjdhj3na234544jasjm2"  --data-urlencode "nomovtra=999960"
+curl -G "https://api.tisoluciona.com/api/pedido" \  -H "Authorization: Bearer 23hhahk34k54fjdhj3na234544jasjm2" \  --data-urlencode "nomovtra=999960"
 ```
 
 ---
 
 ## 2.4) Documentos Fiscais do Pedido: listar
-**Rota base do módulo**: `https://api.tisoluiciona.com/dir-cte`  
-
+**Rota base**: `https://api.tisoluciona.com/api/dir-cte`
 
 ### 2.4.1) Listar documentos por pedido
 **Rota**: `GET /dir-cte/:nomovtra`
@@ -257,7 +250,7 @@ curl -G "https://api.tisoluciona.com/api/pedido"  -H "Authorization: Bearer 23hh
 Lista caminhos dos documentos fiscais de um `nomovtra`. Usa a procedure `PORTAL_PEDIDO_DOCFISCAL(?)` quando disponível. Se não houver linhas, usa fallback direto nas tabelas `TABCTRC` e `TABCONF` para montar nomes esperados de arquivos `-cte.xml` e `-cte.pdf`.  
 Há normalização segura de caminhos para Windows e Linux, incluindo suporte a prefixo `\\?\` para caminhos longos em Windows.
 
-**Resposta de Exemplo (verify=1)**
+**Resposta de Exemplo**
 ```json
 {
   "status": "ok",
@@ -273,7 +266,7 @@ Há normalização segura de caminhos para Windows e Linux, incluindo suporte a 
       "chave": "35240812345678900015550010000123451000012345",
       "tipoarquivo": "pdf",
       "nomearquivo": "35240812345678900015550010000123451000012345-cte.pdf",
-      "dircompleto": "C:\\CTE\\2025\\08\\35240812345678900015550010000123451000012345-cte.pdf",
+      "dircompleto": "C:\\CTE\\2025\\08\\35240812345678900015550010000123451000012345-cte.pdf"
     }
   ]
 }
@@ -282,24 +275,110 @@ Há normalização segura de caminhos para Windows e Linux, incluindo suporte a 
 **cURL**
 ```bash
 # Listar todos
-curl "https://api.tisoluciona.com/api/dir-cte/999960"  -H "Authorization: Bearer 23hhahk34k54fjdhj3na234544jasjm2"
+curl "https://api.tisoluciona.com/api/dir-cte/999960" \  -H "Authorization: Bearer 23hhahk34k54fjdhj3na234544jasjm2"
 
 # Listar apenas os existentes, filtrando por pdf
-curl "https://api.tisoluciona.com/api/dir-cte/999960?onlyExists=1&tipo=pdf"  -H "Authorization: Bearer 23hhahk34k54fjdhj3na234544jasjm2"
+curl "https://api.tisoluciona.com/api/dir-cte/999960?onlyExists=1&tipo=pdf" \  -H "Authorization: Bearer 23hhahk34k54fjdhj3na234544jasjm2"
 ```
 
-
-
 **Códigos de status**
-- `200` arquivo enviado com `Content-Type` coerente  
+- `200` dados retornados  
 - `400` parâmetro obrigatório ausente  
 - `404` arquivo não localizado  
-- `500` erro interno na consulta ou leitura do arquivo
+- `500` erro interno
 
-**Notas de implementação**
-- Procedure utilizada: `PORTAL_PEDIDO_DOCFISCAL(nomovtra)` retornando `CHAVE`, `TIPOARQUIVO`, `NOMEARQUIVO`, `DIRCOMPLETO`.  
-- Fallback consulta `TABCTRC` e diretórios de `TABCONF` (`DIR_XMLCTE`, `DIR_XMLNFSE` quando aplicável).  
-- Normalização de paths com suporte a Windows e Linux, substituição de separadores e prefixo para caminho longo em Windows.
+---
+
+## 2.5) Resolver NOTERM_COL / NOTERM_DEST por nome de local
+**Rota**: `POST /noterm-by-local`
+
+**Descrição**  
+Recebe **nomes** de locais de coleta e/ou entrega e retorna os códigos correspondentes (`NOTERM_COL`, `NOTERM_DEST`) mapeando `TABCLI.NOMCLI -> TABCLI.NOCLI`.
+
+**Body**
+- `localColeta` *(string, opcional — obrigatório se `localEntrega` não for informado)*
+- `localEntrega` *(string, opcional — obrigatório se `localColeta` não for informado)*
+
+**Respostas**
+- `200` sucesso, com um ou ambos os campos resolvidos
+- `404` não encontrado (indica qual campo falhou)
+- `409` ambiguidade — múltiplos cadastros (lista candidatos)
+
+**Exemplos**
+
+Somente coleta:
+```bash
+curl -X POST "https://api.tisoluciona.com/api/noterm-by-local" \  -H "Authorization: Bearer 23hhahk34k54fjdhj3na234544jasjm2" \  -H "Content-Type: application/json" \  -d '{ "localColeta":"PORTO DE ITAJAI" }'
+```
+
+Somente entrega:
+```bash
+curl -X POST "https://api.tisoluciona.com/api/noterm-by-local" \  -H "Authorization: Bearer 23hhahk34k54fjdhj3na234544jasjm2" \  -H "Content-Type: application/json" \  -d '{ "localEntrega":"CURITIBA" }'
+```
+
+Ambos:
+```bash
+curl -X POST "https://api.tisoluciona.com/api/noterm-by-local" \  -H "Authorization: Bearer 23hhahk34k54fjdhj3na234544jasjm2" \  -H "Content-Type: application/json" \  -d '{ "localColeta":"PORTO DE ITAJAI", "localEntrega":"CURITIBA" }'
+```
+
+**Resposta 200 (exemplo)**
+```json
+{ "ok": true, "NOTERM_COL": 4776, "NOTERM_DEST": 3334 }
+```
+
+**Resposta 409 (exemplo)**
+```json
+{
+  "erro": "Ambiguidade no local de coleta",
+  "candidatos": [
+    {"noterm_col": 101, "nomcli": "PORTO ITAJAI"},
+    {"noterm_col": 102, "nomcli": "PORTO DE ITAJAI"} 
+  ]
+}
+```
+
+---
+
+## 2.6) Obter NOMOT por CPF/CNPJ
+**Rota**: `POST /nomot-by-cpf`
+
+**Descrição**  
+Recebe um documento (CPF/CNPJ) **com máscara** e retorna o identificador interno do motorista (`nomot`).  
+Regras:
+- Busca em `TABCLI` por igualdade exata em `CGCCLI` para obter `NOCLI`
+- Se houver movimentos em `TABMOVTRA`, retorna o `NOMOT` do **mais recente** (`ORDER BY NOMOVTRA DESC`); caso contrário, retorna `NOCLI` como fallback
+
+**Body**
+- `cpfMotorista` *(string, obrigatório — formato exatamente como armazenado em `CGCCLI`)*
+
+**Respostas**
+- `200` sucesso: `{ "ok": true, "nomot": 5102 }`
+- `404` não encontrado em `TABCLI`
+- `409` duplicidade em `TABCLI` sem registros em `TABMOVTRA` (lista `nocli` candidatos)
+
+**Exemplo**
+```bash
+curl -X POST "https://api.tisoluciona.com/api/nomot-by-cpf" \  -H "Authorization: Bearer 23hhahk34k54fjdhj3na234544jasjm2" \  -H "Content-Type: application/json" \  -d '{ "cpfMotorista":"028.802.659-40" }'
+```
+
+**Resposta 200 (exemplo)**
+```json
+{ "ok": true, "nomot": 5102, "fonte": "TABMOVTRA", "cpfMotorista": "028.802.659-40" }
+```
+
+**Resposta 404 (exemplo)**
+```json
+{ "erro": "Não encontrado", "detalhes": "Nenhum cadastro em TABCLI com esse documento exatamente igual." }
+```
+
+**Resposta 409 (exemplo)**
+```json
+{
+  "erro": "Duplicidade de CPF/CNPJ",
+  "detalhes": "Múltiplos cadastros e nenhum com movimento em TABMOVTRA.",
+  "candidatos": [ { "nocli": 5102 }, { "nocli": 6120 } ]
+}
+```
 
 ---
 
@@ -316,20 +395,15 @@ curl "https://api.tisoluciona.com/api/dir-cte/999960?onlyExists=1&tipo=pdf"  -H 
 - Todas as rotas exigem JWT no header `Authorization`.  
 - Log de acesso com IP, método, rota e status recomendado via `morgan` em nível `combined`.  
 - Em produção, não retornar paths internos em mensagens de erro.  
-- Sanitizar `nome` e `tipo` da rota de download, evitando path traversal. A implementação já não utiliza inputs do usuário para concatenar diretórios arbitrários.  
+- Sanitizar `nome` e `tipo` da rota de download, evitando path traversal.  
 - Configure permissões do serviço da API para leitura somente nas pastas de XML e PDFs.  
 
 ---
 
-
-
-
----
-
 ## 📝 Changelog
+- **2025-08-12** Adicionadas as rotas **/noterm-by-local** e **/nomot-by-cpf**.  
 - **2025-08-12** Adicionada a rota **/dir-cte** para listar XML e PDF do CTe por `nomovtra` com validação opcional de existência no filesystem.
 
 ---
 
-## ⚠️ Observação de homologação
-Estão sendo feitas inserções de **homologação** neste ambiente.
+_Última atualização: 2025-08-12 20:16:05_
