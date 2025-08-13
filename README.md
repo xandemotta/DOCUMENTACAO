@@ -3,7 +3,7 @@
 Este documento orienta **como consumir a API**. Ele não aborda detalhes internos de banco ou implementação.
 
 > **Alterações recentes (2025-08-13):**
-> - Removidos os itens **2.5 `/noterm-by-local`** e **2.6 `/nomot-by-cpf`**.
+> - Removidos os itens **2.5 ** e **2.6 **.
 > - Atualizada a lógica do endpoint **2) Criar pedido** para resolução por **CNPJ** com fallback e resposta padronizada.
 
 ---
