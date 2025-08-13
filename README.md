@@ -32,7 +32,6 @@ Cria um pedido e registra, opcionalmente, as notas fiscais associadas. A API **r
 
 - **Identificação por CNPJ (preferencial):**
   - `cnpjColeta`, `cnpjEntrega`, `cnpjCliente` são usados para localizar o cadastro correspondente.
-  - Se houver **mais de um** cadastro para o mesmo CNPJ, o sistema desempata pelo **registro (motorista/terminal/cliente) que apareceu no movimento mais recente em `TABMOVTRA`**.
   - Se não houver nenhum cadastro para o CNPJ informado → **HTTP 404** (campo não encontrado).
   - Se houver múltiplos cadastros e **nenhum** tiver movimento para desempate → **HTTP 409** (ambiguidade).
 
