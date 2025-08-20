@@ -37,9 +37,9 @@ Cria um pedido e registra, opcionalmente, as notas fiscais associadas. A API **r
 
 - **Fallbacks legados (opcional):**
   - Caso não envie os CNPJs, você **pode** informar:
-    - `localColeta` (equivalente a NOTERM_COL)
-    - `localEntrega` (equivalente a NOTERM_DEST)
-    - `clienteFaturamento` (equivalente a NOCLI)
+    - `localColeta`
+    - `localEntrega`
+    - `clienteFaturamento`
   - Esses três **juntos** substituem a tríade `cnpjColeta`/`cnpjEntrega`/`cnpjCliente` se estes faltarem.
   - Se nem CNPJs nem fallbacks forem válidos/completos → **HTTP 400**.
 
