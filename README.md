@@ -214,7 +214,7 @@ curl -X POST "https://api.tisoluciona.com/api/criar-pedido"   -H "Authorization:
 ## 5) Suporte
 
 - Se ocorrer **409 Ambiguidade** ao criar um pedido com CNPJ, informe temporariamente os IDs legados `localColeta`, `localEntrega` e `clienteFaturamento` para desbloquear o processo enquanto o cadastro é unificado.
-- Dúvidas sobre consumo: suporte@tisoluciona.com (assunto: **API Pedidos**).
+- Dúvidas sobre consumo: alexandremota@tisoluciona.com (assunto: **API Pedidos**).
 
 ---
 
