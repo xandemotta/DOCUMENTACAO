@@ -85,9 +85,9 @@ Envie **uma** das combinações abaixo:
 ```json
 {
   "placaCavalo": "MBQ9466",
-  "cnpjColeta": 4776,
-  "cnpjEntrega": 3334,
-  "cnpjCliente": 3003,
+  "cnpjColeta": "02.023.797/0001-78",
+  "cnpjEntrega": "81.002.925/0001-73",
+  "cnpjCliente": "07.345.987/0001-00",
   "processoCliente": "PROC-XYZ",
   "tipoContainer": 1,
   "numeroContainer": "ABCD1234567",
