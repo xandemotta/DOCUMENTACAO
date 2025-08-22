@@ -59,9 +59,9 @@ Envie **uma** das combinações abaixo:
 
 **A) Preferencial (por CNPJ):**
 - `placaCavalo`
-- `cnpjColeta`
-- `cnpjEntrega`
-- `cnpjCliente`
+- `localCoaleta`
+- `localEntrega`
+- `clienteFaturamento`
 - `processoCliente`
 - `tipoContainer`
 - `numeroContainer`
@@ -85,30 +85,29 @@ Envie **uma** das combinações abaixo:
 ```json
 {
   "placaCavalo": "MBQ9466",
-  "cnpjColeta": "02.023.797/0001-78",
-  "cnpjEntrega": "81.002.925/0001-73",
-  "cnpjCliente": "07.345.987/0001-00",
+  "localColeta": 4776,
+  "localEntrega": 3334,
+  "clienteFaturamento": 3003,
   "processoCliente": "PROC-XYZ",
   "tipoContainer": 1,
   "numeroContainer": "ABCD1234567",
-  "nomeMotorista": 5102,
+  "nomeMotorista": "5102",
+  "cpfMotorista": "5102",
   "placaCarreta1": "MEE3078",
   "placaCarreta2": null,
   "pesoBrutoTotal": 18500.75,
-  "valorTotalNotas": 32000.50,
+  "valorTotalNotas": 32000.5,
   "empresa": 1,
   "tipoFrete": 1,
   "tipoCarga": 2,
   "usuario": "INTEGRADOR1",
-  "notasFiscais": [
-    {
-      "nonf": "12345",
-      "dataemi": "2025-08-06",
+  "notasFiscais": [{
+    "nonf": "12345",
       "pesobr": 5000.00,
       "vlrtotal": 10000.00,
       "chavenfe": "43250505638569000524570030000020921060219563",
       "cfop": "5353"
-    }
+  }
   ]
 }
 ```
