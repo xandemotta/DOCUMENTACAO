@@ -59,9 +59,9 @@ Envie **uma** das combinações abaixo:
 
 **A) Preferencial (por CNPJ):**
 - `placaCavalo`
-- `localCoaleta`
-- `localEntrega`
-- `clienteFaturamento`
+- `cnpjColeta`
+- `cnpjEntrega`
+- `cnpjCliente`
 - `processoCliente`
 - `tipoContainer`
 - `numeroContainer`
@@ -85,9 +85,9 @@ Envie **uma** das combinações abaixo:
 ```json
 {
   "placaCavalo": "MBQ9466",
-  "localColeta": 4776,
-  "localEntrega": 3334,
-  "clienteFaturamento": 3003,
+  "cnpjColeta": 4776,
+  "cnpjEntrega": 3334,
+  "cnpjCliente": 3003,
   "processoCliente": "PROC-XYZ",
   "tipoContainer": 1,
   "numeroContainer": "ABCD1234567",
