@@ -70,8 +70,8 @@ Envie **uma** das combinações abaixo:
 - `empresa`
 - `tipoFrete`
 - `tipoCarga`
-- `pesoBrutoTotal`
-- `valorTotalNotas`
+- `VLRMOT_BRUTO`
+- `VLRPED`
 - `notasFiscais` (array)
 
 **OU B) Fallback legado (sem CNPJ), desde que envie os três:**
@@ -95,8 +95,8 @@ Envie **uma** das combinações abaixo:
   "cpfMotorista": "5102",
   "placaCarreta1": "MEE3078",
   "placaCarreta2": null,
-  "pesoBrutoTotal": 18500.75,
-  "valorTotalNotas": 32000.5,
+  "VLRMOT_BRUTO": 18500.75,
+  "VLRPED": 32000.5,
   "empresa": 1,
   "tipoFrete": 1,
   "tipoCarga": 2,
@@ -175,8 +175,8 @@ curl -X POST "https://api.tisoluciona.com/api/criar-pedido"   -H "Authorization:
     "nomeMotorista": 5102,
     "placaCarreta1": "MEE3078",
     "placaCarreta2": null,
-    "pesoBrutoTotal": 18500.75,
-    "valorTotalNotas": 32000.50,
+    "VLRMOT_BRUTO": 18500.75,
+    "VLRPED": 32000.50,
     "empresa": 1,
     "tipoFrete": 1,
     "tipoCarga": 2,
