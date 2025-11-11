@@ -224,3 +224,95 @@ curl -X POST "https://api.tisoluciona.com/api/criar-pedido"   -H "Authorization:
   - Atualizada a lógica de **/criar-pedido**: resolução por CNPJ com desempate por movimento mais recente, resposta padronizada com `documento`/`documentoSemMascara`/`tipoDocumento`, e manutenção dos campos legados por compatibilidade.
 - **2025-08-12** Adicionadas as rotas **/noterm-by-local** e **/nomot-by-cpf**.  
 - **2025-08-12** Adicionada a rota **/dir-cte** para listar XML e PDF do CTe por `nomovtra` com validação opcional de existência no filesystem.
+
+  ---
+
+## 7) Deletar Nota Fiscal (CTE NF)
+**Rota:** `DELETE /deletar-nf`
+
+**Descrição:**
+- Remove uma NF de `TABMOVTRA_NF` para um `nomovtra` e `item` informados.
+- Antes de excluir, valida com a procedure `P_API_PEDIDO_ELITE(nomovtra)`; se `RETORNO <> 'T'`, a exclusão é negada.
+- Remove também os XMLs relacionados em `TABMOVTRA_NF_XML` para evitar restrições.
+
+**Body/Query:** `nomovtra` (obrigatório), `item` (obrigatório)
+
+Logger:
+- Registra em `TABMOVTRA_INTEGR` com `TIPO='NF_DELETE'`, `INTEGR_DATA=CURRENT_TIMESTAMP`, `INTEGR_USUARIO` (usuário do JWT quando disponível).
+
+**Resposta:** 200 OK com mensagem de sucesso.
+
+---
+
+## 8) Deletar XML da Nota Fiscal (CTE NF XML)
+**Rota:** `DELETE /deletar-xml`
+
+**Descrição:**
+- Exclui XML(s) de `TABMOVTRA_NF_XML`.
+- Valida com `P_API_PEDIDO_ELITE(nomovtra)` antes de excluir.
+
+**Body/Query:**
+- Obrigatório: `nomovtra`.
+- E: `itemxmlnfe` para excluir um XML específico; ou `item` para excluir todos os XMLs daquele item.
+
+Logger:
+- Registra em `TABMOVTRA_INTEGR` com `TIPO='NF_XML_DELETE'`, `INTEGR_DATA=CURRENT_TIMESTAMP`, `INTEGR_USUARIO`.
+
+**Resposta:** 200 OK com mensagem de sucesso.
+
+— Observação: não há endpoints de edição para NF ou XML; apenas exclusão e reenvio (criação), conforme regra de negócio.
+
+---
+
+## 5) Atualizar Pedido (UPDATE)
+  **Rota:** `PUT /editar-pedido`
+
+  **Descrição:**
+- Atualiza campos do pedido existente em `TABMOVTRA` usando o `nomovtra` como chave.
+- Antes de atualizar, a API executa a procedure `P_API_PEDIDO_ELITE(nomovtra)` para validar a possibilidade de edição. Se `RETORNO <> 'T'`, a requisição é rejeitada com a mensagem retornada pela procedure.
+- Após a atualização, é inserido um log em `TABMOVTRA_INTEGR` com `TIPO = 'UPDATE'`, `INTEGR_DATA = CURRENT_TIMESTAMP` e `INTEGR_USUARIO` (usuário autenticado ou fornecido no body).
+
+**Campos aceitos no body:**
+- `nomovtra` (obrigatório)
+- `placacav`, `data`, `data_hora`, `noterm_col`, `noterm_dest`, `nocli`, `processo`, `notipcont`, `container`, `placacar`, `placacar2`, `noemp`, `notipfre`, `notipcarga`
+- `nomot` (opcional) — código do motorista; ou informe `cpfMotorista`/`cpf_motorista` (a API resolve o `nocli` do motorista e grava em `nomot`).
+- `integr_usuario` (opcional) — usuário a registrar no log; por padrão usa o `username` do token JWT.
+
+**Exemplo de Entrada (PUT /api/editar-pedido):**
+```json
+{
+  "nomovtra": 999960,
+  "placacav": "AAA1B23",
+  "data": "2025-08-07",
+  "data_hora": "2025-08-07 14:40",
+  "noterm_col": 4776,
+  "noterm_dest": 3334,
+  "processo": "PROC-XYZ-EDIT",
+  "cpfMotorista": "12345678900",
+  "placacar": "BBB1C23",
+  "integr_usuario": "INTEGRADOR1"
+}
+```
+
+**Resposta de Sucesso:**
+```json
+{
+  "sucesso": true,
+  "nomovtra": 999960,
+  "camposAtualizados": 6,
+  "mensagem": "Pedido atualizado com sucesso e log inserido"
+}
+```
+
+— Validações aplicadas pela procedure: `P_API_PEDIDO_ELITE` (pedido não encontrado, CIOT emitido, documento fiscal emitido, GRIS feito, viagem criada, etc.).
+
+---
+
+## 🧩 Comportamentos Importantes
+- `ITEM` em `TABMOVTRA_NF` é **sempre** gerado pelo banco: `SELECT GEN_ID(ITEMMOVTRA, 1) ...`  
+- `ITEMXMLNFE` em `TABMOVTRA_NF_XML` é **sempre** gerado pelo banco: `SELECT GEN_ID(GEN_ITEMXMLNFE, 1) ...`  
+- `TIPONF` é fixo `"E"` nas NFs.  
+- Codificação `win1252` é aplicada apenas nos campos textuais enviados ao banco.  
+- `DATA_HORA` do pedido é armazenado como string `HH:MM` no seu ambiente.
+
+---
