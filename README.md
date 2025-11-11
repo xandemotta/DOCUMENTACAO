@@ -264,7 +264,7 @@ Logger:
 
 ---
 
-## 5) Atualizar Pedido (UPDATE)
+## 9) Atualizar Pedido (UPDATE)
   **Rota:** `PUT /editar-pedido`
 
   **Descrição:**
