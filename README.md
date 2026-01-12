@@ -10,7 +10,7 @@ Este documento orienta **como consumir a API**. Ele não aborda detalhes interno
 
 ## 1) Informações Gerais
 
-- **Base URL (produção):** `http://mmsistemas.ddns.net:3000/api/`
+- **Base URL (produção):** `http://mmsistemas.ddns.net:3449/api/`
 - **Autenticação:** `Bearer <JWT_TOKEN>` no header `Authorization`
 - **Content-Type:** `application/json; charset=utf-8`
 - **Timezone de referência:** America/Sao_Paulo (datas podem ser enviadas no padrão do exemplo).
