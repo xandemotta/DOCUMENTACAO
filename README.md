@@ -278,31 +278,36 @@ Logger:
 - `nomot` (opcional) — código do motorista; ou informe `cpfMotorista`/`cpf_motorista` (a API resolve o `nocli` do motorista e grava em `nomot`).
 - `integr_usuario` (opcional) — usuário a registrar no log; por padrão usa o `username` do token JWT.
 
-## 10) Inserir XML da Nota Fiscal
-**Rota: POST /inserir-xml**
 
-Descrição:
-Anexa o XML da NF em TABMOVTRA_NF_XML.
-O campo ITEMXMLNFE é gerado automaticamente pelo banco com GEN_ID(GEN_ITEMXMLNFE, 1) e DATAREG é a data atual (YYYY-MM-DD).
+### 10) POST /api/inserir-xml
 
-Campos obrigatórios do body:
+Request:
 
-nomovtra
-item (ITEM da NF gerado na rota acima)
-xml (conteúdo completo do XML)
-Exemplo de Entrada:
-
+```json
 {
   "nomovtra": 999954,
   "item": 12,
   "xml": "<nfeProc versao=\"4.00\" xmlns=\"http://www.portalfiscal.inf.br/nfe\"><NFe>...</NFe></nfeProc>"
 }
-Resposta de Sucesso:
+```
 
+Response:
+
+```json
 {
   "message": "XML da NF registrado com sucesso.",
   "itemxmlnfe": 5678
 }
+```
+
+cURL:
+
+```bash
+curl -X POST "https://api.tisoluciona.com/api/inserir-xml" \
+  -H "Authorization: Bearer SEU_JWT_AQUI" \
+  -H "Content-Type: application/json" \
+  --data '{"nomovtra":999954,"item":12,"xml":"<nfeProc versao=\"4.00\" xmlns=\"http://www.portalfiscal.inf.br/nfe\"><NFe>...</NFe></nfeProc>"}'
+```
 
 **Exemplo de Entrada (PUT /api/editar-pedido):**
 ```json
