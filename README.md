@@ -3,14 +3,15 @@
 Este documento orienta **como consumir a API**. Ele não aborda detalhes internos de banco ou implementação.
 
 > **Alterações recentes (2025-08-13):**
-> - Removidos os itens **2.5 ** e **2.6 **.
-> - Atualizada a lógica do endpoint **2) Criar pedido** para resolução por **CNPJ** com fallback e resposta padronizada.
+> - Atualizada a lógica do endpoint **Criar pedido** para resolução por **CNPJ** com fallback e resposta padronizada.
+> - XML de NF pode ser enviado **dentro de cada nota** (`notasFiscais[].xml`).
+> - `DELETE /api/deletar-xml` retorna **404** quando não encontra XML para excluir.
 
 ---
 
 ## 1) Informações Gerais
 
-- **Base URL (produção):** `http://mmsistemas.ddns.net:3449/api/`
+- **Base URL (produção):** `http://mmsistemas.ddns.net:3449/api`
 - **Autenticação:** `Bearer <JWT_TOKEN>` no header `Authorization`
 - **Content-Type:** `application/json; charset=utf-8`
 - **Timezone de referência:** America/Sao_Paulo (datas podem ser enviadas no padrão do exemplo).
@@ -24,7 +25,8 @@ Authorization: Bearer SEU_JWT_AQUI
 
 ## 2) Criar pedido
 
-**Rota:** `POST /criar-pedido`  
+**Rota:** `POST /api/criar-pedido`  
+**Alias:** `POST /api/criar-pedido-correto`  
 **Descrição (visão de consumo):**  
 Cria um pedido e registra, opcionalmente, as notas fiscais associadas. A API **resolve CNPJs** informados em **coleta**, **entrega** e **cliente de faturamento** para identificar os respectivos cadastros, com **desempate automático** quando houver múltiplos cadastros, escolhendo o que teve **movimento mais recente**.
 
@@ -46,12 +48,13 @@ Cria um pedido e registra, opcionalmente, as notas fiscais associadas. A API **r
 - **Motorista:**
   - `nomeMotorista` deve ser o **código NOCLI** do motorista já cadastrado.
   - A resposta retorna:
-    - `nomeMotorista`: **NOCLI** do motorista (numérico, sem formatação de nome)
+    - `nomeMotorista`: **NOCLI** do motorista (numérico)
     - `cpfMotorista`: documento do cadastro (somente dígitos, pode ser CPF ou CNPJ).
 
 - **Notas fiscais:**
   - Envie em `notasFiscais` um array com itens `{ nonf, dataemi, pesobr, vlrtotal, chavenfe, cfop? }`.
   - `cfop` é opcional; se omitido, será salvo vazio.
+  - **XML opcional:** cada nota pode incluir `xml`. Se enviado, o XML é gravado e a resposta inclui `notasFiscaisInseridas` com `itemxmlnfe`.
 
 ### 2.2) Campos obrigatórios
 
@@ -92,7 +95,6 @@ Envie **uma** das combinações abaixo:
   "tipoContainer": 1,
   "numeroContainer": "ABCD1234567",
   "nomeMotorista": "5102",
-  "cpfMotorista": "5102",
   "placaCarreta1": "MEE3078",
   "placaCarreta2": null,
   "VLRMOT_BRUTO": 18500.75,
@@ -101,13 +103,16 @@ Envie **uma** das combinações abaixo:
   "tipoFrete": 1,
   "tipoCarga": 2,
   "usuario": "INTEGRADOR1",
-  "notasFiscais": [{
-    "nonf": "12345",
+  "notasFiscais": [
+    {
+      "nonf": "12345",
+      "dataemi": "2025-08-06",
       "pesobr": 5000.00,
       "vlrtotal": 10000.00,
       "chavenfe": "43250505638569000524570030000020921060219563",
-      "cfop": "5353"
-  }
+      "cfop": "5353",
+      "xml": "<xml>...</xml>"
+    }
   ]
 }
 ```
@@ -144,7 +149,14 @@ Envie **uma** das combinações abaixo:
     "documentoSemMascara": "07345987930",
     "tipoDocumento": "CPF",
     "cnpj": "073.459.879-30"
-  }
+  },
+  "notasFiscaisInseridas": [
+    {
+      "item": 1,
+      "nonf": "12345",
+      "itemxmlnfe": 40641
+    }
+  ]
 }
 ```
 
@@ -157,14 +169,17 @@ Envie **uma** das combinações abaixo:
 | 400  | `Campos obrigatórios ausentes` | Nem CNPJs válidos nem os três fallbacks fornecidos | Envie `cnpjColeta/cnpjEntrega/cnpjCliente` ou `localColeta/localEntrega/clienteFaturamento` |
 | 404  | `CNPJ ... não encontrado` | CNPJ não existe no cadastro | Confirme o CNPJ ou cadastre previamente |
 | 409  | `Ambiguidade em ...` | Múltiplos cadastros para o CNPJ e nenhum movimento para desempate | Informe o código exato (`localColeta/localEntrega/clienteFaturamento`) |
-| 409  | `Conflito de chave primária` | NOMOVTRA já existe (situação rara por reprocessamento) | Reenvie sem reutilizar o mesmo identificador |
+| 409  | `Conflito de chave primária` | NOMOVTRA já existe (situação rara) | Reenvie sem reutilizar o mesmo identificador |
 | 422  | `Erro de conversão de dados` | Formato inválido (datas/números) | Ajuste para o formato do exemplo |
 | 500  | `Erro interno ao salvar o pedido` | Falha inesperada | Reenvie; se persistir, acione o suporte com o payload |
 
 ### 2.6) cURL de exemplo
 
 ```bash
-curl -X POST "https://api.tisoluciona.com/api/criar-pedido"   -H "Authorization: Bearer SEU_JWT_AQUI"   -H "Content-Type: application/json"   --data-raw '{
+curl -X POST "http://mmsistemas.ddns.net:3449/api/criar-pedido" \
+  -H "Authorization: Bearer SEU_JWT_AQUI" \
+  -H "Content-Type: application/json" \
+  --data-raw '{
     "placaCavalo": "MBQ9466",
     "cnpjColeta": "02.023.797/0001-78",
     "cnpjEntrega": "81.002.925/0001-73",
@@ -187,7 +202,8 @@ curl -X POST "https://api.tisoluciona.com/api/criar-pedido"   -H "Authorization:
       "pesobr": 5000.00,
       "vlrtotal": 10000.00,
       "chavenfe": "43250505638569000524570030000020921060219563",
-      "cfop": "5353"
+      "cfop": "5353",
+      "xml": "<xml>...</xml>"
     }]
   }'
 ```
@@ -196,11 +212,11 @@ curl -X POST "https://api.tisoluciona.com/api/criar-pedido"   -H "Authorization:
 
 ## 3) Consultar pedido (básico)
 
-**Rota:** `GET /pedido?nomovtra={numero}`  
+**Rota:** `GET /api/pedido?nomovtra={numero}`  
 **Descrição:** Retorna os dados do pedido criado, quando disponível.  
-**Exemplo:** `GET /pedido?nomovtra=999970`
+**Exemplo:** `GET /api/pedido?nomovtra=999970`
 
-> Observação: campos e formato seguem a mesma convenção da resposta do **Criar pedido** quando aplicável.
+> Observação: cada nota fiscal traz `xmls: [{ item, itemxmlnfe, xml }]` quando houver XML cadastrado.
 
 ---
 
@@ -222,12 +238,12 @@ curl -X POST "https://api.tisoluciona.com/api/criar-pedido"   -H "Authorization:
 - **2025-08-13**:
   - Removidos **/noterm-by-local** e **/nomot-by-cpf**.
   - Atualizada a lógica de **/criar-pedido**: resolução por CNPJ com desempate por movimento mais recente, resposta padronizada com `documento`/`documentoSemMascara`/`tipoDocumento`, e manutenção dos campos legados por compatibilidade.
-- **2025-08-12** Adicionadas as rotas **/noterm-by-local** e **/nomot-by-cpf**.  
+- **2025-08-12** Adicionadas as rotas **/noterm-by-local** e **/nomot-by-cpf**.
 
-  ---
+---
 
 ## 7) Deletar Nota Fiscal (CTE NF)
-**Rota:** `DELETE /deletar-nf`
+**Rota:** `DELETE /api/deletar-nf`
 
 **Descrição:**
 - Remove uma NF de `TABMOVTRA_NF` para um `nomovtra` e `item` informados.
@@ -244,7 +260,7 @@ Logger:
 ---
 
 ## 8) Deletar XML da Nota Fiscal (CTE NF XML)
-**Rota:** `DELETE /deletar-xml`
+**Rota:** `DELETE /api/deletar-xml`
 
 **Descrição:**
 - Exclui XML(s) de `TABMOVTRA_NF_XML`.
@@ -257,16 +273,14 @@ Logger:
 Logger:
 - Registra em `TABMOVTRA_INTEGR` com `TIPO='NF_XML_DELETE'`, `INTEGR_DATA=CURRENT_TIMESTAMP`, `INTEGR_USUARIO`.
 
-**Resposta:** 200 OK com mensagem de sucesso.
-
-— Observação: não há endpoints de edição para NF ou XML; apenas exclusão e reenvio (criação), conforme regra de negócio.
+**Resposta:** 200 OK com mensagem de sucesso; se o XML não existir, retorna **404**.
 
 ---
 
 ## 9) Atualizar Pedido (UPDATE)
-  **Rota:** `PUT /editar-pedido`
+**Rota:** `PUT /api/editar-pedido`
 
-  **Descrição:**
+**Descrição:**
 - Atualiza campos do pedido existente em `TABMOVTRA` usando o `nomovtra` como chave.
 - Antes de atualizar, a API executa a procedure `P_API_PEDIDO_ELITE(nomovtra)` para validar a possibilidade de edição. Se `RETORNO <> 'T'`, a requisição é rejeitada com a mensagem retornada pela procedure.
 - Após a atualização, é inserido um log em `TABMOVTRA_INTEGR` com `TIPO = 'UPDATE'`, `INTEGR_DATA = CURRENT_TIMESTAMP` e `INTEGR_USUARIO` (usuário autenticado ou fornecido no body).
@@ -277,11 +291,12 @@ Logger:
 - `nomot` (opcional) — código do motorista; ou informe `cpfMotorista`/`cpf_motorista` (a API resolve o `nocli` do motorista e grava em `nomot`).
 - `integr_usuario` (opcional) — usuário a registrar no log; por padrão usa o `username` do token JWT.
 
+---
 
-### 10) POST /api/inserir-xml
+## 10) Inserir XML da Nota Fiscal
+**Rota:** `POST /api/inserir-xml`
 
 Request:
-
 ```json
 {
   "nomovtra": 999954,
@@ -291,7 +306,6 @@ Request:
 ```
 
 Response:
-
 ```json
 {
   "message": "XML da NF registrado com sucesso.",
@@ -299,50 +313,12 @@ Response:
 }
 ```
 
-cURL:
-
-```bash
-curl -X POST "https://api.tisoluciona.com/api/inserir-xml" \
-  -H "Authorization: Bearer SEU_JWT_AQUI" \
-  -H "Content-Type: application/json" \
-  --data '{"nomovtra":999954,"item":12,"xml":"<nfeProc versao=\"4.00\" xmlns=\"http://www.portalfiscal.inf.br/nfe\"><NFe>...</NFe></nfeProc>"}'
-```
-
-**Exemplo de Entrada (PUT /api/editar-pedido):**
-```json
-{
-  "nomovtra": 999960,
-  "placacav": "AAA1B23",
-  "data": "2025-08-07",
-  "data_hora": "2025-08-07 14:40",
-  "noterm_col": 4776,
-  "noterm_dest": 3334,
-  "processo": "PROC-XYZ-EDIT",
-  "cpfMotorista": "12345678900",
-  "placacar": "BBB1C23",
-  "integr_usuario": "INTEGRADOR1"
-}
-```
-
-**Resposta de Sucesso:**
-```json
-{
-  "sucesso": true,
-  "nomovtra": 999960,
-  "camposAtualizados": 6,
-  "mensagem": "Pedido atualizado com sucesso e log inserido"
-}
-```
-
-— Validações aplicadas pela procedure: `P_API_PEDIDO_ELITE` (pedido não encontrado, CIOT emitido, documento fiscal emitido, GRIS feito, viagem criada, etc.).
-
 ---
 
 ## 🧩 Comportamentos Importantes
-- `ITEM` em `TABMOVTRA_NF` é **sempre** gerado pelo banco: `SELECT GEN_ID(ITEMMOVTRA, 1) ...`  
-- `ITEMXMLNFE` em `TABMOVTRA_NF_XML` é **sempre** gerado pelo banco: `SELECT GEN_ID(GEN_ITEMXMLNFE, 1) ...`  
-- `TIPONF` é fixo `"E"` nas NFs.  
-- Codificação `win1252` é aplicada apenas nos campos textuais enviados ao banco.  
+- `ITEM` em `TABMOVTRA_NF`:
+  - **/api/criar-pedido** usa sequência interna (1, 2, 3...).
+  - **/api/inserir-nf** usa o generator `ITEMMOVTRA`.
+- `ITEMXMLNFE` em `TABMOVTRA_NF_XML` é **sempre** gerado pelo banco: `GEN_ITEMXMLNFE`.
+- Codificação `win1252` é aplicada apenas nos campos textuais enviados ao banco.
 - `DATA_HORA` do pedido é armazenado como string `HH:MM` no seu ambiente.
-
----
