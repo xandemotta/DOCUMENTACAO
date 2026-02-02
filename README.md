@@ -223,7 +223,6 @@ curl -X POST "https://api.tisoluciona.com/api/criar-pedido"   -H "Authorization:
   - Removidos **/noterm-by-local** e **/nomot-by-cpf**.
   - Atualizada a lógica de **/criar-pedido**: resolução por CNPJ com desempate por movimento mais recente, resposta padronizada com `documento`/`documentoSemMascara`/`tipoDocumento`, e manutenção dos campos legados por compatibilidade.
 - **2025-08-12** Adicionadas as rotas **/noterm-by-local** e **/nomot-by-cpf**.  
-- **2025-08-12** Adicionada a rota **/dir-cte** para listar XML e PDF do CTe por `nomovtra` com validação opcional de existência no filesystem.
 
   ---
 
