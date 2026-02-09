@@ -288,8 +288,37 @@ Logger:
 **Campos aceitos no body:**
 - `nomovtra` (obrigatório)
 - `placacav`, `data`, `data_hora`, `noterm_col`, `noterm_dest`, `nocli`, `processo`, `notipcont`, `container`, `placacar`, `placacar2`, `noemp`, `notipfre`, `notipcarga`
+- `cnpjColeta`, `cnpjEntrega`, `cnpjCliente` (opcionais; resolvem para `noterm_col`, `noterm_dest`, `nocli`)
 - `nomot` (opcional) — código do motorista; ou informe `cpfMotorista`/`cpf_motorista` (a API resolve o `nocli` do motorista e grava em `nomot`).
 - `integr_usuario` (opcional) — usuário a registrar no log; por padrão usa o `username` do token JWT.
+Obs: se `cnpjColeta`/`cnpjEntrega`/`cnpjCliente` forem enviados, a API resolve em `TABCLI`. Se não encontrar, retorna **404**; se houver ambiguidade sem desempate, retorna **409**.
+
+**Exemplo de request (update):**
+```json
+{
+  "nomovtra": 999960,
+  "placacav": "AAA1B23",
+  "data": "2026-02-09",
+  "data_hora": "2026-02-09 14:40",
+  "cnpjColeta": "36.975.508/0001-52",
+  "cnpjEntrega": "02.023.797/0001-78",
+  "cnpjCliente": "81.002.925/0001-73",
+  "processo": "PROC-XYZ-EDIT",
+  "cpfMotorista": "12345678900",
+  "placacar": "BBB1C23",
+  "integr_usuario": "INTEGRADOR1"
+}
+```
+
+**Exemplo de resposta (update):**
+```json
+{
+  "sucesso": true,
+  "nomovtra": 999960,
+  "camposAtualizados": 8,
+  "mensagem": "Pedido atualizado com sucesso e log inserido"
+}
+```
 
 ---
 
@@ -300,7 +329,6 @@ Request:
 ```json
 {
   "nomovtra": 999954,
-  "item": 12,
   "xml": "<nfeProc versao=\"4.00\" xmlns=\"http://www.portalfiscal.inf.br/nfe\"><NFe>...</NFe></nfeProc>"
 }
 ```
@@ -309,9 +337,11 @@ Response:
 ```json
 {
   "message": "XML da NF registrado com sucesso.",
+  "item": 12,
   "itemxmlnfe": 5678
 }
 ```
+Obs: se `item` **não** for enviado, a API utiliza o **último ITEM** existente em `TABMOVTRA_NF` para o `nomovtra` informado. O `itemxmlnfe` é sempre gerado automaticamente pelo banco.
 
 ---
 
